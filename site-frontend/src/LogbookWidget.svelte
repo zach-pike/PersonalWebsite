@@ -1,6 +1,8 @@
 <script lang="ts">
     import { getRecentLogbookPosts } from "./lib/logbook";
-    let posts = getRecentLogbookPosts("http://localhost:3000");
+    import { getServerURL } from "./lib/utils";
+    
+    let posts = getRecentLogbookPosts(getServerURL());
 </script>
 
 <div class="w-full">
