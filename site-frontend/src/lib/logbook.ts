@@ -58,6 +58,7 @@ export interface LogbookPost {
   callsign: string
   location: string | Coordinates;
   notes: string;
+  time: number;
 }
 
 export async function getRecentLogbookPosts(server: string, n?: number): Promise<LogbookPost[]> {
