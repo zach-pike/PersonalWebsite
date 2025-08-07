@@ -26,7 +26,7 @@ export class BlogService {
     }
 
     async getRecentPosts(): Promise<BlogPost[]> {
-        let recent = await this.blogPostModel.find({}).exec();
+        let recent = await this.blogPostModel.find({}).sort({ time: -1 }).exec();
         return recent;
     }
 }

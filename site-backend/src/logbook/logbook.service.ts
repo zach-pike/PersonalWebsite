@@ -26,6 +26,6 @@ export class LogbookService {
     }
 
     async loadPosts() {
-        return await this.logEntryModel.find({}).exec();
+        return await this.logEntryModel.find({}).sort({ time: -1 }).exec();
     }
 }
