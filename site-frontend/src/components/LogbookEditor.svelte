@@ -2,11 +2,11 @@
     import { getAccessToken } from "../lib/globals";
     import { getServerURL } from "../lib/utils";
 
-    let band: string = "";
-    let frequency: number = 0;
-    let mode: string = "";
-    let quality: number = 0;
-    let strength: string = "";
+    let band: string = "10/11m (CB)";
+    let frequency: number = 27.385;
+    let mode: string = "LSB";
+    let quality: number = 5;
+    let strength: string = "S5";
     let callsign: string = "";
     let location: string = "";
     let notes: string = "";
