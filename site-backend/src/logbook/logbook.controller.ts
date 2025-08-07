@@ -1,28 +1,22 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Request, UseGuards } from '@nestjs/common';
+import { LogbookService } from './logbook.service';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { RoleGuard } from 'src/auth/role.guard';
+import { LogEntryDTO } from './dto/logentry.dto';
+import { JwtUser } from 'src/auth/interfaces/jwtuser.interface';
 
 @Controller('logbook')
 export class LogbookController {
+    constructor(private readonly logbookService: LogbookService) {}
+    
     @Get('recent')
-    async getRecentLogs(@Query("n") n: string | null) {
-        let count = n ? parseInt(n) : 5;
+    async getRecentLogs() {
+        return this.logbookService.loadPosts();
+    }
 
-        console.log(count);
-
-        return [
-            {
-                band: "10/11m (CB)",
-                quality: 5,
-                callsign: "555",
-                location: "Missouri",
-                notes: "None"
-            },
-            {
-                band: "10/11m (CB)",
-                quality: 8,
-                callsign: "777",
-                location: "Montana",
-                notes: "Long conversation"
-            }
-        ]
+    @Post('new')
+    @UseGuards(AuthGuard, RoleGuard('admin'))
+    async newPost(@Request() { user }: { user: JwtUser }, @Body() data: LogEntryDTO) {
+        this.logbookService.createNewPost(user._id, data);
     }
 }

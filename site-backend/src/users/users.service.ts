@@ -1,19 +1,20 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { User } from './interfaces/user.interface';
+import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { UserRole } from './roles';
 import * as bcrypt from 'bcrypt';
+import { InjectModel } from '@nestjs/mongoose';
+import { User, UserDocument } from './schemas/user.schema';
 
 @Injectable()
 export class UsersService {
-    constructor(@Inject('USER_MODEL') private readonly userModel: Model<User>) {}
+    constructor(@InjectModel(User.name) private readonly userModel: Model<UserDocument>) {}
 
-    async findUserByUsername(username: string) : Promise<null | User> {
+    async findUserByUsername(username: string) : Promise<null | UserDocument> {
         let res = await this.userModel.findOne({ username }).exec();
         return res;
     }
 
-    async createNewUser(username, displayName, password) {
+    async createNewUser(username: string, displayName: string, password: string) {
         let passwordHash = await bcrypt.hash(password, 10); 
 
         let a = new this.userModel({

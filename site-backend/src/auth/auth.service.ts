@@ -3,6 +3,7 @@ import { UsersService } from 'src/users/users.service';
 import { LoginDTO } from './dto/login.dto';
 import { TokensDTO } from './dto/tokens.dto';
 import * as jwt from 'jsonwebtoken';
+import { JwtUser } from './interfaces/jwtuser.interface';
 
 @Injectable()
 export class AuthService {
@@ -16,11 +17,12 @@ export class AuthService {
 
         if (!authed) return null;
 
-        let jwtObject = {
+        let jwtObject: JwtUser = {
             username: user.username,
             displayName: user.displayName,
             roles: user.roles,
-            created: user.created
+            created: user.created,
+            _id: user._id as string
         };
 
         let accessSecret = process.env.ACCESS_TOKEN_SECRET;
@@ -35,5 +37,17 @@ export class AuthService {
             accessToken,
             refreshToken
         };
+    }
+
+    async verify(token: string): Promise<null | JwtUser> {
+        let accessSecret = process.env.ACCESS_TOKEN_SECRET;
+        if (!accessSecret) throw "No access token specified!";
+
+        try {
+            let data = jwt.verify(token, accessSecret);
+            return data as JwtUser;
+        } catch(e) {
+            return null;
+        }
     }
 }
