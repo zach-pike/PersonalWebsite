@@ -23,4 +23,13 @@ export class AuthController {
 
         return res;
     }
+
+    @Post('refresh')
+    async refresh(@Body() data: { refreshToken: string }) {
+        let res = await this.authService.refreshUser(data.refreshToken);
+
+        if (!res) throw new HttpException("Could not refresh user", 400);
+
+        return res;
+    }
 }
