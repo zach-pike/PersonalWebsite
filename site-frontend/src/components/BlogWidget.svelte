@@ -1,6 +1,9 @@
 <script lang="ts">
     import { getRecentBlogPosts } from "../lib/blog";
     import { getServerURL } from "../lib/utils";
+    import SvelteMarkdown from "svelte-markdown";
+    import { fixedRenderers } from "../md-renderers/index";
+
     let posts = getRecentBlogPosts(getServerURL());
 </script>
 
@@ -14,7 +17,7 @@
             {#each awaitedPosts as p}
                 <div class="bg-gray-200 p-4 my-1">
                     <p><span class="font-bold">{p.title}</span> <span class="italic text-sm">{new Date(p.time).toLocaleString('en-US')}</span></p>
-                    <p>{p.content}</p>
+                    <SvelteMarkdown source={p.content} renderers={fixedRenderers} />
                 </div>
             {/each}
         {/if}

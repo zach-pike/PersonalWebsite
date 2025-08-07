@@ -20,6 +20,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
     "jwt-decode": "^4.0.0",
+    "svelte-markdown": "^0.4.1",
     "svelte-routing": "^2.13.0",
     "tailwindcss": "^4.1.11"
   }
