@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { getRecentBlogPosts } from "./lib/blog";
-    import { getServerURL } from "./lib/utils";
+    import { getRecentBlogPosts } from "../lib/blog";
+    import { getServerURL } from "../lib/utils";
     let posts = getRecentBlogPosts(getServerURL());
 </script>
 

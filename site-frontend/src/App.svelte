@@ -1,35 +1,63 @@
 <script lang="ts">
-  import BlogWidget from "./BlogWidget.svelte";
-    import LogbookWidget from "./LogbookWidget.svelte";
+    import { login, logout, tokens, userData } from "./lib/globals";
+    import { getServerURL } from "./lib/utils";
+
+    import { Router, Link, Route } from "svelte-routing";
+    import HomePage from "./pages/HomePage.svelte";
+
+    import Modal from './components/Modal.svelte';
+    import CreateNewBlogPost from "./components/CreateNewBlogPost.svelte";
+
+    async function loginProcedure() {
+        let username = prompt("Username?") ?? "";
+        let password = prompt("Password?") ?? "";
+        let result = await login(username, password);
+
+        if (!result) alert("Failed to login!");
+    }
+
+    let blogEditorOpen = false;
+
+    export let url = "";
 </script>
 
-<div class="bg-slate-700 w-full h-full flex flex-col items-center p-4 overflow-y-scroll">
-  <p class="w-full md:w-3/4 text-white text-3xl m-2">zpike.net</p>
-  <div class="w-full md:w-3/4 flex-col sm:flex-row flex gap-1">
+<Router {url}>
+    <div class="bg-slate-700 w-full h-full flex flex-col items-center p-4 overflow-y-scroll">
+        <p class="w-full md:w-3/4 text-white text-3xl m-2">zpike.net</p>
+        <div class="w-full md:w-3/4 flex-col sm:flex-row flex gap-1">
 
-    <div class="p-4 sm:w-3/4 w-full h-full bg-white">
-      <p class="text-2xl">Welcome!</p>
-      <p>Hello, my name is Zachary and this is my website! I live on the eastern shore of Maryland, near Kent Island. My hobbies include; Computing, Radio, Engineering, and of course Programming. I am interested in pursuing a Computer Science Degree from Salisbury Univerity, for now I work at a marina doing boat related stuff.</p>
-    
-      <div class="w-full bg-gray-500 h-[1px] m-2"></div>
-      
-      <p class="text-xl m-1">Updates</p>
-      <BlogWidget />
+            <div class="p-4 sm:w-3/4 w-full h-full bg-white">
+                <Route path="/">
+                    <HomePage />
+                </Route>
+            </div>
 
-      <div class="w-full bg-gray-500 h-[1px] m-2"></div>
+            <div class="p-4 sm:w-1/4 w-full h-full bg-white flex flex-col items-left">
+                <p class="font-bold">Navigation</p>
 
-      <p class="text-xl m-1">QSO Logbook</p>
-      <LogbookWidget />
+                <ul class="underline">
+                    <li><a href="https://github.com/zach-pike">My Github</a></li>
+                    <li><Link to="randomProject">Go to a random project</Link></li>
+                    <li><Link to="qso">QSO book</Link></li>
+                    <li><p class="cursor-pointer" on:click={loginProcedure}>Login</p></li>
+                    <li><p class="cursor-pointer" on:click={logout}>Logout</p></li>
+                </ul>
+
+                {#if $userData != null && $userData.roles.includes("admin")}
+                    <p class="font-bold text-red-800">Admin Panel items</p>
+                
+                    <ul class="underline">
+                        <li><a href="#" on:click={() => blogEditorOpen = true}>Blog post editor</a></li>
+                        <li><a href="#">QSO editor</a></li>
+                    </ul>
+
+                    <!-- Blog post modal -->
+                    <Modal title="Create Blog Post" bind:isOpen={blogEditorOpen}>
+                        <CreateNewBlogPost />
+                    </Modal>
+                {/if}
+            </div>
+        </div>
     </div>
 
-    <div class="p-4 sm:w-1/4 w-full h-full bg-white flex flex-col items-center">
-      <p>Navigation</p>
-
-      <ul class="underline">
-        <li><a href="https://github.com/zach-pike">My Github</a></li>
-        <li><a href="#">Go to a random project</a></li>
-        <li><a href="#">QSO book</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
+</Router>
