@@ -16,7 +16,13 @@ export class LogbookService {
         };
 
         let a = new this.logEntryModel(le);
-        await a.save();
+        
+        try {
+            await a.save();
+            return true;
+        } catch(e) {
+            return false;
+        }
     }
 
     async loadPosts() {

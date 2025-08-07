@@ -1,25 +1,25 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, Post, Request, UseGuards } from '@nestjs/common';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { JwtUser } from 'src/auth/interfaces/jwtuser.interface';
+import { RoleGuard } from 'src/auth/role.guard';
+import { CreateBlogPostDTO } from './dto/createblogpost.dto';
+import { BlogService } from './blog.service';
 
 @Controller('blog')
 export class BlogController {
+    constructor(private readonly blogService: BlogService) {}
+
     @Get('recent')
     async getRecent() {
-        return [
-            {
-                title: "blogone",
-                time: Date.now(),
-                content: "hello world"
-            },
-            {
-                title: "blogtwo",
-                time: Date.now() - (24*60*60*1000),
-                content: "hello world"
-            },
-            {
-                title: "blogthree",
-                time: Date.now() - 2 * (24*60*60*1000),
-                content: "hello world"
-            }
-        ]
+        return this.blogService.getRecentPosts();
+    }
+
+    @Post('new')
+    @UseGuards(AuthGuard, RoleGuard('admin'))
+    async createBlogPost(@Request() { user }: { user: JwtUser}, @Body() data: CreateBlogPostDTO) {
+        let res = await this.blogService.createNewPost(user._id, data);
+
+        if (!res) throw new HttpException("Could not save to DB!", 500);
+        return "OK";
     }
 }

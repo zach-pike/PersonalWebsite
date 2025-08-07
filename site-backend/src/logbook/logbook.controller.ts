@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, Post, Query, Request, UseGuards } from '@nestjs/common';
 import { LogbookService } from './logbook.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { RoleGuard } from 'src/auth/role.guard';
@@ -17,6 +17,9 @@ export class LogbookController {
     @Post('new')
     @UseGuards(AuthGuard, RoleGuard('admin'))
     async newPost(@Request() { user }: { user: JwtUser }, @Body() data: LogEntryDTO) {
-        this.logbookService.createNewPost(user._id, data);
+        let res = await this.logbookService.createNewPost(user._id, data);
+
+        if (!res) throw new HttpException("Error saving to DB!", 500);
+        return "OK";
     }
 }

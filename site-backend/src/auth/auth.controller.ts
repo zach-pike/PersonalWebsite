@@ -13,8 +13,8 @@ export class AuthController {
     async newUser(@Body() data: CreateUserDTO) {
         let res = await this.usersService.createNewUser(data.username, data.displayName, data.password);
 
-        if (res) return "OK";
-        else throw new HttpException("Server error", 500);
+        if (!res) throw new HttpException("Server error", 500);
+        return "OK";
     }
 
     @Post('login')

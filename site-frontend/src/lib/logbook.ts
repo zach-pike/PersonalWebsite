@@ -52,13 +52,14 @@ export interface Coordinates {
   long: number;
 }
 
-export interface LogbookPost {
+export interface LogEntry {
   band: string,
   quality: number;
   callsign: string
   location: string | Coordinates;
   notes: string;
   time: number;
+  poster: string;
 }
 
 export async function getRecentLogbookPosts(server: string, n?: number): Promise<LogbookPost[]> {

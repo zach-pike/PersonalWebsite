@@ -26,9 +26,12 @@ export class UsersService {
             roles: [UserRole.Default],
         });
 
-        await a.save();
-
-        return true;
+        try {
+            await a.save();
+            return true;
+        } catch(e) {
+            return false;
+        }
     }
 
     async authorizeUser(user: User, password: string) {
