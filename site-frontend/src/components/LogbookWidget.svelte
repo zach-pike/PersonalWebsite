@@ -20,8 +20,8 @@
                             <span class="inline sm:hidden">B.</span>
                         </th>
                         <th class="px-2 py-2 border-b">
-                            <span class="hidden sm:inline">Quality</span>
-                            <span class="inline sm:hidden">Qual.</span>
+                            <span class="hidden sm:inline">Mode</span>
+                            <span class="inline sm:hidden">M.</span>
                         </th>
                         <th class="px-2 py-2 border-b">
                             <span class="hidden sm:inline">Callsign</span>
@@ -30,6 +30,10 @@
                         <th class="px-2 py-2 border-b">
                             <span class="hidden sm:inline">Location</span>
                             <span class="inline sm:hidden">Loc.</span>
+                        </th>
+                        <th class="px-2 py-2 border-b">
+                            <span class="hidden sm:inline">Strength</span>
+                            <span class="inline sm:hidden">S.</span>
                         </th>
                         <th class="px-2 py-2 border-b">
                             <span class="hidden sm:inline">Notes</span>
@@ -42,9 +46,10 @@
                     {#each awaitedPosts as p}
                         <tr class="even:bg-gray-100">
                             <td class="px-1 py-2 border-b">{p.band}</td>
-                            <td class="px-1 py-2 border-b">{p.quality}</td>
+                            <td class="px-1 py-2 border-b">{p.mode}</td>
                             <td class="px-1 py-2 border-b">{p.callsign}</td>
                             <td class="px-1 py-2 border-b">{p.location}</td>
+                            <td class="px-1 py-2 border-b">{p.strength}</td>
                             <td class="px-1 py-2 border-b">{p.notes}</td>
                         </tr>
                     {/each}

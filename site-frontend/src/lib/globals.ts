@@ -32,40 +32,84 @@ async function refreshTokens() {
     let storedTokens = loadTokensFromLocalStorage();
     if (!storedTokens) return false;
 
+    // Refresh token
+    let req = await fetch(
+        `${getServerURL()}/auth/refresh`,
+        {
+            method: "POST",
+            headers: {
+                "content-type": "application/json"
+            },
+            body: JSON.stringify({
+                refreshToken: storedTokens.refreshToken
+            })
+        }
+    );
+
+    if (!req.ok) return false;
+
+    let newTokens: TokensDTO = await req.json();
+    storeTokensToLocalStorage(newTokens);
+
+    // Update writables
+    tokens.set(newTokens);
+
+    return true;
+}
+
+let refreshTimeoutDescriptor: number | null = null;
+
+function startRefreshTimeout() {
+    let tokens = loadTokensFromLocalStorage();
+    if (!tokens) return;
+
+    let decodedAccessToken = jwtDecode(tokens.accessToken);
+    if (!decodedAccessToken || !decodedAccessToken.exp) return;
+
+    let timeTillExpiary = decodedAccessToken.exp * 1000 - Date.now();
+    console.log(`Refreshing tokens in ${timeTillExpiary}ms`);
+
+    refreshTimeoutDescriptor = setTimeout(async () => {
+        // Refresh the tokens
+        let a = await refreshTokens();
+
+        if (a) {
+            console.log("Refreshed tokens!");
+
+            // if refreshed properly then restart the timer
+            startRefreshTimeout()
+        } else {
+            console.log("Could not refresh tokens");
+        }
+    }, timeTillExpiary);
+}
+
+async function tryReloadSession() {
+    let storedTokens = loadTokensFromLocalStorage();
+    if (!storedTokens) return false;
+
     let access = jwtDecode(storedTokens.accessToken);
     let refresh = jwtDecode(storedTokens.refreshToken);
 
     // is the access token still valid?
     if (access.exp && (access.exp * 1000) > Date.now()) {
+        // Start the token refresh
+        startRefreshTimeout();
         return true;
     }
 
     // no
     // is the refresh token still valid?
     if (refresh.exp && (refresh.exp * 1000) > Date.now()) {
-        // Refresh token
-        let req = await fetch(
-            `${getServerURL()}/auth/refresh`,
-            {
-                method: "POST",
-                headers: {
-                    "content-type": "application/json"
-                },
-                body: JSON.stringify({
-                    refreshToken: storedTokens.refreshToken
-                })
-            }
-        );
+        let a = await refreshTokens();
 
-        if (!req.ok) return false;
-
-        let newTokens: TokensDTO = await req.json();
-        storeTokensToLocalStorage(newTokens);
-
-        // Update writables
-        tokens.set(newTokens);
-
-        return true;
+        if (a) {
+            // Start the token refresh
+            startRefreshTimeout();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // no
@@ -104,20 +148,26 @@ export async function login(username: string, password: string) {
     storeTokensToLocalStorage(tokenData);
     tokens.set(tokenData);
 
+    // Start refresh timer
+    startRefreshTimeout();
+
     return true;
 }
 
 export function logout() {
     storeTokensToLocalStorage(null);
     tokens.set(null);
+
+    // Stop refreshing tokens
+    if (refreshTimeoutDescriptor) clearTimeout(refreshTimeoutDescriptor);
 }
 
 // Refresh loaded tokens
-refreshTokens().then((v) => {
-    if (!v) {
+tryReloadSession().then((v) => {
+    if (v) {
         console.log("Session reloaded");
     } else {
-        console.log("Session could not be reloaded " + v);
+        console.log("Session could not be reloaded ");
     }
 });
 

@@ -1,24 +1,28 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 
-export interface Coordinates {
-  lat: number;
-  long: number;
-}
-
 @Schema()
 export class LogEntry {
     @Prop({ required: true })
     band: string;
 
     @Prop({ required: true })
-    quality: number
+    frequency: number;
+
+    @Prop({ required: true })
+    mode: string;
+
+    @Prop({ required: true })
+    quality: number;
+
+    @Prop({ required: true })
+    strength: string;
 
     @Prop({ required: true })
     callsign: string;
 
-    @Prop({ required: true, type: mongoose.Schema.Types.Mixed })
-    location: string | Coordinates
+    @Prop({ required: true })
+    location: string;
     
     @Prop({ required: true })
     notes: string;

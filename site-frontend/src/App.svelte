@@ -1,12 +1,11 @@
 <script lang="ts">
-    import { login, logout, tokens, userData } from "./lib/globals";
-    import { getServerURL } from "./lib/utils";
-
+    import { login, logout, userData } from "./lib/globals";
     import { Router, Link, Route } from "svelte-routing";
     import HomePage from "./pages/HomePage.svelte";
 
     import Modal from './components/Modal.svelte';
-    import CreateNewBlogPost from "./components/CreateNewBlogPost.svelte";
+    import BlogPostEditor from "./components/BlogPostEditor.svelte";
+    import LogbookEditor from "./components/LogbookEditor.svelte";
 
     async function loginProcedure() {
         let username = prompt("Username?") ?? "";
@@ -17,6 +16,7 @@
     }
 
     let blogEditorOpen = false;
+    let logbookEditorOpen = false;
 
     export let url = "";
 </script>
@@ -38,7 +38,7 @@
                 <ul class="underline">
                     <li><a href="https://github.com/zach-pike">My Github</a></li>
                     <li><Link to="randomProject">Go to a random project</Link></li>
-                    <li><Link to="qso">QSO book</Link></li>
+                    <li><Link to="logbook">QSO book</Link></li>
                     <li><p class="cursor-pointer" on:click={loginProcedure}>Login</p></li>
                     <li><p class="cursor-pointer" on:click={logout}>Logout</p></li>
                 </ul>
@@ -48,12 +48,17 @@
                 
                     <ul class="underline">
                         <li><a href="#" on:click={() => blogEditorOpen = true}>Blog post editor</a></li>
-                        <li><a href="#">QSO editor</a></li>
+                        <li><a href="#" on:click={() => logbookEditorOpen = true}>QSO editor</a></li>
                     </ul>
 
                     <!-- Blog post modal -->
                     <Modal title="Create Blog Post" bind:isOpen={blogEditorOpen}>
-                        <CreateNewBlogPost />
+                        <BlogPostEditor />
+                    </Modal>
+
+                    <!-- Logbook modal -->
+                    <Modal title="QSO Editor" bind:isOpen={logbookEditorOpen}>
+                        <LogbookEditor />
                     </Modal>
                 {/if}
             </div>
