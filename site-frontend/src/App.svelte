@@ -33,22 +33,41 @@
             </div>
 
             <div class="p-4 sm:w-1/4 w-full h-full bg-white flex flex-col items-left">
+                {#if $userData != null}
+                    <p class="text-xl">Hello, <span class="font-bold">{$userData.displayName}</span>!</p>
+
+                    <div class="w-full bg-gray-500 h-[1px] m-2"></div>
+                {/if}
                 <p class="font-bold">Navigation</p>
 
                 <ul class="underline">
                     <li><a href="https://github.com/zach-pike">My Github</a></li>
                     <li><Link to="randomProject">Go to a random project</Link></li>
                     <li><Link to="logbook">QSO book</Link></li>
-                    <li><p class="cursor-pointer" on:click={loginProcedure}>Login</p></li>
-                    <li><p class="cursor-pointer" on:click={logout}>Logout</p></li>
-                </ul>
 
+                    {#if $userData == null}
+                        <!-- svelte-ignore a11y_click_events_have_key_events -->
+                        <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+                        <li><p class="cursor-pointer" on:click={loginProcedure}>Login</p></li>
+                    {:else}
+                        <!-- svelte-ignore a11y_click_events_have_key_events -->
+                        <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+                        <li><p class="cursor-pointer" on:click={logout}>Logout</p></li>
+                    {/if}
+                </ul>
+                
+                <!-- If user is admin display admin items -->
                 {#if $userData != null && $userData.roles.includes("admin")}
+                    <div class="w-full bg-gray-500 h-[1px] m-2"></div>
+
                     <p class="font-bold text-red-800">Admin Panel items</p>
                 
                     <ul class="underline">
-                        <li><a href="#" on:click={() => blogEditorOpen = true}>Blog post editor</a></li>
-                        <li><a href="#" on:click={() => logbookEditorOpen = true}>QSO editor</a></li>
+                        <!-- svelte-ignore a11y_invalid_attribute -->
+                        <li><a href="#" on:click={() => blogEditorOpen = true}>Blogpost editor</a></li>
+                        
+                        <!-- svelte-ignore a11y_invalid_attribute -->
+                        <li><a href="#" on:click={() => logbookEditorOpen = true}>Logbook editor</a></li>
                     </ul>
 
                     <!-- Blog post modal -->
@@ -57,12 +76,11 @@
                     </Modal>
 
                     <!-- Logbook modal -->
-                    <Modal title="QSO Editor" bind:isOpen={logbookEditorOpen}>
+                    <Modal title="Logbook Editor" bind:isOpen={logbookEditorOpen}>
                         <LogbookEditor />
                     </Modal>
                 {/if}
             </div>
         </div>
     </div>
-
 </Router>
