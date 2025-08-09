@@ -52,7 +52,7 @@ async function refreshTokens() {
     storeTokensToLocalStorage(newTokens);
 
     // Update writables
-    tokens.set(newTokens);
+    accessToken.set(newTokens.accessToken);
 
     return true;
 }
@@ -123,6 +123,17 @@ export function getAccessToken() {
     return a.accessToken;
 }
 
+export function getAccessTokenIfValid() {
+    let a = loadTokensFromLocalStorage();
+    if (!a) return null;
+
+    // decode
+    let data = jwtDecode(a.accessToken);
+    if (!data.exp || (data.exp * 1000) > Date.now()) return null;
+
+    return a.accessToken;
+}
+
 export async function login(username: string, password: string) {
     let res = await fetch(
         getServerURL() + "/auth/login",
@@ -146,7 +157,7 @@ export async function login(username: string, password: string) {
     
     // Update writables && localstorage
     storeTokensToLocalStorage(tokenData);
-    tokens.set(tokenData);
+    accessToken.set(tokenData.accessToken);
 
     // Start refresh timer
     startRefreshTimeout();
@@ -156,7 +167,7 @@ export async function login(username: string, password: string) {
 
 export function logout() {
     storeTokensToLocalStorage(null);
-    tokens.set(null);
+    accessToken.set(null);
 
     // Stop refreshing tokens
     if (refreshTimeoutDescriptor) clearTimeout(refreshTimeoutDescriptor);
@@ -171,16 +182,16 @@ tryReloadSession().then((v) => {
     }
 });
 
-export const tokens = writable<TokensDTO | null>(loadTokensFromLocalStorage());
+export const accessToken = writable<string | null>(getAccessTokenIfValid());
 export const userData = writable<JwtUser | null>(null);
 
 // Update the decoded jwt data when the tokens writable is updated
-tokens.subscribe((v) => {
+accessToken.subscribe((v) => {
     if (!v) {
         userData.set(null);
         return;
     }
 
-    let data = jwtDecode(v.accessToken);
+    let data = jwtDecode(v);
     userData.set(data as JwtUser);
 });
