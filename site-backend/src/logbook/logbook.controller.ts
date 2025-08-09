@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpException, Post, Query, Request, UseGuards } from '@nestjs/common';
 import { LogbookService } from './logbook.service';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { RoleGuard } from 'src/auth/role.guard';
+import { PermissionGuard } from 'src/auth/permission.guard';
 import { LogEntryDTO } from './dto/logentry.dto';
 import { JwtUser } from 'src/auth/interfaces/jwtuser.interface';
 
@@ -15,7 +15,7 @@ export class LogbookController {
     }
 
     @Post('new')
-    @UseGuards(AuthGuard, RoleGuard('admin'))
+    @UseGuards(AuthGuard, PermissionGuard('admin.logbook.post'))
     async newPost(@Request() { user }: { user: JwtUser }, @Body() data: LogEntryDTO) {
         let res = await this.logbookService.createNewPost(user._id, data);
 

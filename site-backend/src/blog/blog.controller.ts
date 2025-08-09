@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpException, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { JwtUser } from 'src/auth/interfaces/jwtuser.interface';
-import { RoleGuard } from 'src/auth/role.guard';
+import { PermissionGuard } from 'src/auth/permission.guard';
 import { CreateBlogPostDTO } from './dto/createblogpost.dto';
 import { BlogService } from './blog.service';
 
@@ -15,7 +15,7 @@ export class BlogController {
     }
 
     @Post('new')
-    @UseGuards(AuthGuard, RoleGuard('admin'))
+    @UseGuards(AuthGuard, PermissionGuard('admin.blog.post'))
     async createBlogPost(@Request() { user }: { user: JwtUser}, @Body() data: CreateBlogPostDTO) {
         let res = await this.blogService.createNewPost(user._id, data);
 
