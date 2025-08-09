@@ -1,11 +1,13 @@
 <script lang="ts">
-    import { login, logout, userData } from "./lib/globals";
+    import { initAuth, login, logout, userData } from "./lib/globals";
     import { Router, Link, Route } from "svelte-routing";
     import HomePage from "./pages/HomePage.svelte";
 
     import Modal from './components/Modal.svelte';
     import BlogPostEditor from "./components/BlogPostEditor.svelte";
     import LogbookEditor from "./components/LogbookEditor.svelte";
+    import { onMount } from "svelte";
+    import FileHostWidget from "./components/FileHost/FileHostWidget.svelte";
 
     async function loginProcedure() {
         let username = prompt("Username?") ?? "";
@@ -17,8 +19,13 @@
 
     let blogEditorOpen = false;
     let logbookEditorOpen = false;
+    let fileUploadManagerOpen = false;  
 
     export let url = "";
+
+    onMount(() => {
+        initAuth();
+    });
 </script>
 
 <Router {url}>
@@ -68,6 +75,8 @@
                         
                         <!-- svelte-ignore a11y_invalid_attribute -->
                         <li><a href="#" on:click={() => logbookEditorOpen = true}>Logbook editor</a></li>
+
+                        <li><a href="#" on:click={() => fileUploadManagerOpen = true}>File upload</a></li>
                     </ul>
 
                     <!-- Blog post modal -->
@@ -78,6 +87,11 @@
                     <!-- Logbook modal -->
                     <Modal title="Logbook Editor" bind:isOpen={logbookEditorOpen}>
                         <LogbookEditor />
+                    </Modal>
+
+                    <!-- File Upload -->
+                    <Modal title="Upload a file" bind:isOpen={fileUploadManagerOpen}>
+                        <FileHostWidget />
                     </Modal>
                 {/if}
             </div>

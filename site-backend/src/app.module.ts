@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { FileStorageModule } from './file-storage/file-storage.module';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { MongooseModule } from '@nestjs/mongoose';
     ConfigModule.forRoot(),
     UsersModule,
     AuthModule,
-    MongooseModule.forRoot('mongodb://localhost/personal-website')
+    MongooseModule.forRoot('mongodb://localhost/personal-website'),
+    FileStorageModule
   ],
   controllers: [AppController],
   providers: [AppService],
