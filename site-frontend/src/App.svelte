@@ -31,15 +31,15 @@
 <Router {url}>
     <div class="bg-slate-700 w-full h-full flex flex-col items-center p-4 overflow-y-scroll">
         <p class="w-full md:w-3/4 text-white text-3xl m-2">zpike.net</p>
-        <div class="w-full md:w-3/4 flex-col sm:flex-row flex gap-1">
+        <div class="gap-1 grid grid-cols-1 sm:grid-cols-[3fr_1fr] w-full md:w-3/4">
 
-            <div class="p-4 sm:w-3/4 w-full h-full bg-white">
+            <div class="p-4 w-full h-full bg-white">
                 <Route path="/">
                     <HomePage />
                 </Route>
             </div>
 
-            <div class="p-4 sm:w-1/4 w-full h-full bg-white flex flex-col items-left">
+            <div class="p-4 w-full h-full bg-white flex flex-col items-left">
                 {#if $userData != null}
                     <p class="text-xl">Hello, <span class="font-bold">{$userData.displayName}</span>!</p>
 
@@ -94,6 +94,16 @@
                         <FileHostWidget />
                     </Modal>
                 {/if}
+            </div>
+
+            <div class="w-full h-32 bg-white sm:col-span-2 flex items-center justify-center flex-col">
+                <p>&copy; Zachary Pike 2025</p>
+                <div class="flex gap-2">
+                    <p>Some of my friends websites</p>
+                    <p>|</p>
+                    <a href="https://of-random.net" class="text-blue-500">of-random.net</a>
+                    <a href="https://wrzeczak.net/" class="text-blue-500">wrzeczak.net</a>
+                </div>
             </div>
         </div>
     </div>
