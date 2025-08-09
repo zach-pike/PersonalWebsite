@@ -15,11 +15,20 @@ export interface JwtUser {
     _id: string;
 }
 
+export const accessToken = writable<string | null>(null);
+export const userData = writable<JwtUser | null>(null);
+
+/**
+ * Attempts to load tokens from localStorage, if unsucessful returns null
+ */
 function loadTokensFromLocalStorage(): TokensDTO | null {
     let storedTokenDataStr = localStorage.getItem("tokens");
     return storedTokenDataStr != null ? JSON.parse(storedTokenDataStr) : null;
 }
 
+/**
+ * @param tokens Stores tokens when value is non-null & clears localStorage when null is provided
+ */
 function storeTokensToLocalStorage(tokens: TokensDTO | null) {
     if (!tokens) {
         localStorage.removeItem("tokens");
@@ -28,7 +37,13 @@ function storeTokensToLocalStorage(tokens: TokensDTO | null) {
     }
 }
 
-async function refreshTokens() {
+/**
+ * Attempts to refresh and update the access tokens stored in localStorage, 
+ * also updates the accessToken readable and localStorage when successful
+ * 
+ * returns `true` when successful and `false` on failure
+ */
+async function refreshTokens(): Promise<boolean> {
     let storedTokens = loadTokensFromLocalStorage();
     if (!storedTokens) return false;
 
@@ -59,6 +74,11 @@ async function refreshTokens() {
 
 let refreshTimeoutDescriptor: number | null = null;
 
+/**
+ * This function when called will automaticially refresh the access 
+ * token when it expires and will continue to do so untill the interval 
+ * is cleared
+ */
 function startRefreshTimeout() {
     let tokens = loadTokensFromLocalStorage();
     if (!tokens) return;
@@ -84,6 +104,15 @@ function startRefreshTimeout() {
     }, timeTillExpiary);
 }
 
+/**
+ * This function attemps to refresh the tokens stored in localstorage,
+ * If access token is still valid, it will just restore the accessToken writable from localStorage
+ * If access token is expired & refresh token is still valid, it will refresh the accessToken with the server,
+ * then updating localStorage & the accessToken writable
+ * If both tokens are expired it will fail
+ * 
+ * Sucess at refreshing returns `true`, while a failure returns `false`
+*/
 async function tryReloadSession() {
     let storedTokens = loadTokensFromLocalStorage();
     if (!storedTokens) return false;
@@ -95,6 +124,10 @@ async function tryReloadSession() {
     if (access.exp && (access.exp * 1000) > Date.now()) {
         // Start the token refresh
         startRefreshTimeout();
+
+        // Restore access token writable
+        accessToken.set(storedTokens.accessToken);
+
         return true;
     }
 
@@ -120,17 +153,6 @@ async function tryReloadSession() {
 export function getAccessToken() {
     let a = loadTokensFromLocalStorage();
     if (!a) throw "No tokens stored";
-    return a.accessToken;
-}
-
-export function getAccessTokenIfValid() {
-    let a = loadTokensFromLocalStorage();
-    if (!a) return null;
-
-    // decode
-    let data = jwtDecode(a.accessToken);
-    if (!data.exp || (data.exp * 1000) > Date.now()) return null;
-
     return a.accessToken;
 }
 
@@ -173,25 +195,24 @@ export function logout() {
     if (refreshTimeoutDescriptor) clearTimeout(refreshTimeoutDescriptor);
 }
 
-// Refresh loaded tokens
-tryReloadSession().then((v) => {
-    if (v) {
-        console.log("Session reloaded");
-    } else {
-        console.log("Session could not be reloaded ");
-    }
-});
+export function initAuth() {
+    // Refresh loaded tokens
+    tryReloadSession().then((v) => {
+        if (v) {
+            console.log("Session reloaded");
+        } else {
+            console.log("Session could not be reloaded ");
+        }
+    });
 
-export const accessToken = writable<string | null>(getAccessTokenIfValid());
-export const userData = writable<JwtUser | null>(null);
+    // Update the decoded jwt data when the access token writable is updated
+    accessToken.subscribe((v) => {
+        if (!v) {
+            userData.set(null);
+            return;
+        }
 
-// Update the decoded jwt data when the tokens writable is updated
-accessToken.subscribe((v) => {
-    if (!v) {
-        userData.set(null);
-        return;
-    }
-
-    let data = jwtDecode(v);
-    userData.set(data as JwtUser);
-});
+        let data = jwtDecode(v);
+        userData.set(data as JwtUser);
+    });
+}
