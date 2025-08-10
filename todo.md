@@ -1,8 +1,7 @@
 website ideas
 
  - [ ] project list page
- - [ ] blog page
- - [ ] last spotify listen
+ - [x] last spotify listen
  - [x] radio log book
  - [ ] finish file upload manager
  - [ ] finish the blog editor (add edit page and delete options)
