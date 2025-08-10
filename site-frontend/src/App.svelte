@@ -41,7 +41,6 @@
             getServerURL() + '/spotify/recentlyPlayed'
         ).then(v => {
             if (!v.ok) return;
-
             return v.json();
         }).then(v => {
             spotifyData = v;
@@ -70,14 +69,12 @@
 
                 {#if spotifyData != null}
                     <p class="font-bold">Song last listened to</p>
-                    <div class="w-full h-16 flex gap-2">
-                        <div class="h-full">
-                            <img src="{spotifyData.albumArt}" class="h-full">
-                        </div>
+                    <div class="w-full flex gap-2 items-center">
+                        <img src="{spotifyData.albumArt}" class="w-14 h-14" alt="{spotifyData.album}">
 
-                        <div>
+                        <div class="h-full">
                             <p>{spotifyData.name}</p>
-                            <p class="text-sm">{spotifyData.album}</p>
+                            <p class="text-sm italic">{spotifyData.album}</p>
                             <p class="text-xs">{spotifyData.artist}</p>
                         </div>
                     </div>
