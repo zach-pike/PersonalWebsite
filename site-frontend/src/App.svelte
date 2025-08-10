@@ -77,7 +77,7 @@
 
                         <div>
                             <p>{spotifyData.name}</p>
-                            <p class="text-sm">{spotifyData.name}</p>
+                            <p class="text-sm">{spotifyData.album}</p>
                             <p class="text-xs">{spotifyData.artist}</p>
                         </div>
                     </div>
