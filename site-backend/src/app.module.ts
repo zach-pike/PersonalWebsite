@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { FileStorageModule } from './file-storage/file-storage.module';
+import { SpotifyModule } from './spotify/spotify.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { FileStorageModule } from './file-storage/file-storage.module';
     UsersModule,
     AuthModule,
     MongooseModule.forRoot('mongodb://localhost/personal-website'),
-    FileStorageModule
+    FileStorageModule,
+    SpotifyModule
   ],
   controllers: [AppController],
   providers: [AppService],

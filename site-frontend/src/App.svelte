@@ -8,6 +8,7 @@
     import LogbookEditor from "./components/LogbookEditor.svelte";
     import { onMount } from "svelte";
     import FileHostWidget from "./components/FileHost/FileHostWidget.svelte";
+    import { getServerURL } from "./lib/utils";
 
     async function loginProcedure() {
         let username = prompt("Username?") ?? "";
@@ -19,12 +20,33 @@
 
     let blogEditorOpen = false;
     let logbookEditorOpen = false;
-    let fileUploadManagerOpen = false;  
+    let fileUploadManagerOpen = false;
+
+    interface SongInfo {
+        name: string;
+        artist: string;
+        album: string;
+        albumArt: string;
+    };
+
+    let spotifyData: SongInfo | null = null;
 
     export let url = "";
 
     onMount(() => {
         initAuth();
+
+        // Load the spotify data
+        fetch(
+            getServerURL() + '/spotify/recentlyPlayed'
+        ).then(v => {
+            if (!v.ok) return;
+
+            return v.json();
+        }).then(v => {
+            spotifyData = v;
+            console.log(v);
+        });
     });
 </script>
 
@@ -45,6 +67,24 @@
 
                     <div class="w-full bg-gray-500 h-[1px] m-2"></div>
                 {/if}
+
+                {#if spotifyData != null}
+                    <p class="font-bold">Song last listened to</p>
+                    <div class="w-full h-16 flex gap-2">
+                        <div class="h-full">
+                            <img src="{spotifyData.albumArt}" class="h-full">
+                        </div>
+
+                        <div>
+                            <p>{spotifyData.name}</p>
+                            <p class="text-sm">{spotifyData.name}</p>
+                            <p class="text-xs">{spotifyData.artist}</p>
+                        </div>
+                    </div>
+
+                    <div class="w-full bg-gray-500 h-[1px] m-2"></div>
+                {/if}
+
                 <p class="font-bold">Navigation</p>
 
                 <ul class="underline">
