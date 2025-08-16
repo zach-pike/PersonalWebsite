@@ -150,6 +150,10 @@ async function tryReloadSession() {
     return false;
 }
 
+/**
+ * This function returns the access token from localStorage
+ * if no token is stored, throws a error
+ */
 export function getAccessToken() {
     let a = loadTokensFromLocalStorage();
     if (!a) throw "No tokens stored";
