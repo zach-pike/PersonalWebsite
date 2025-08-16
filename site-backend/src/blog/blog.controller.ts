@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, Post, Query, Request, UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { JwtUser } from 'src/auth/interfaces/jwtuser.interface';
 import { PermissionGuard } from 'src/auth/permission.guard';
@@ -21,5 +21,24 @@ export class BlogController {
 
         if (!res) throw new HttpException("Could not save to DB!", 500);
         return "OK";
+    }
+
+    @Get('get')
+    async listPaginationEndpoint(
+        @Query('start') start: number | null,
+        @Query('end') end : number | null,
+        @Query('info') info: string | null
+    ) {
+        if (start && end) {
+            return await this.blogService.getPagedItems(start, end);
+        } else if (info) {
+            switch(info) {
+                case "totalItems": {
+                    return await this.blogService.getTotalItems();
+                };
+            }
+        } else {
+            throw new HttpException("Unknown request type", 400);
+        }
     }
 }

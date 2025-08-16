@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { FileStorage, FileStorageDocument } from './schemas/fileupload.schema';
+import { FileStorage, FileStorageDocument } from './schemas/filestorage.schema';
 import { Model } from 'mongoose';
 import * as fs from 'fs';
 import * as path from 'path';

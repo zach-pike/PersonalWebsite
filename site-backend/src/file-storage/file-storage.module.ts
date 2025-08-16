@@ -5,7 +5,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { AuthService } from 'src/auth/auth.service';
 import { UsersModule } from 'src/users/users.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { FileStorage, FileStorageSchema } from './schemas/fileupload.schema';
+import { FileStorage, FileStorageSchema } from './schemas/filestorage.schema';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import * as path from 'path';
 

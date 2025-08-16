@@ -29,4 +29,19 @@ export class BlogService {
         let recent = await this.blogPostModel.find({}).sort({ time: -1 }).exec();
         return recent;
     }
+
+    async getTotalItems(): Promise<number> {
+        return this.blogPostModel.countDocuments({}).exec();
+    }
+
+    async getPagedItems(start: number, end: number): Promise<BlogPost[]> {
+        let items = await this.blogPostModel
+            .find({})
+            .sort({ time: -1 })
+            .skip(start)
+            .limit(end - start)
+            .exec();
+
+        return items;
+    }
 }

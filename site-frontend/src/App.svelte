@@ -9,6 +9,10 @@
     import { onMount } from "svelte";
     import FileHostWidget from "./components/FileHost/FileHostWidget.svelte";
     import { getServerURL } from "./lib/utils";
+    import SpotifyWidget from "./components/SpotifyWidget.svelte";
+    import Projects from "./pages/Projects.svelte";
+    import ProjectPostEditor from "./components/ProjectPostEditor.svelte";
+    import ViewProject from "./pages/ViewProject.svelte";
 
     async function loginProcedure() {
         let username = prompt("Username?") ?? "";
@@ -21,31 +25,12 @@
     let blogEditorOpen = false;
     let logbookEditorOpen = false;
     let fileUploadManagerOpen = false;
-
-    interface SongInfo {
-        name: string;
-        artist: string;
-        album: string;
-        albumArt: string;
-    };
-
-    let spotifyData: SongInfo | null = null;
+    let projectPostEditorOpen = false;
 
     export let url = "";
 
     onMount(() => {
         initAuth();
-
-        // Load the spotify data
-        fetch(
-            getServerURL() + '/spotify/recentlyPlayed'
-        ).then(v => {
-            if (!v.ok) return;
-            return v.json();
-        }).then(v => {
-            spotifyData = v;
-            console.log(v);
-        });
     });
 </script>
 
@@ -58,36 +43,35 @@
                 <Route path="/">
                     <HomePage />
                 </Route>
+
+                <Route path="/projects">
+                    <Projects />
+                </Route>
+
+                <Route path="/projects/:id" let:params>
+                    <ViewProject projectId={params.id} />
+                </Route>
             </div>
 
             <div class="p-4 w-full h-full bg-white flex flex-col items-left">
                 {#if $userData != null}
                     <p class="text-xl">Hello, <span class="font-bold">{$userData.displayName}</span>!</p>
 
-                    <div class="w-full bg-gray-500 h-[1px] m-2"></div>
+                    <hr class="bg-black my-2">
                 {/if}
 
-                {#if spotifyData != null}
-                    <p class="font-bold">Song last listened to</p>
-                    <div class="w-full flex gap-2 items-center">
-                        <img src="{spotifyData.albumArt}" class="w-14 h-14" alt="{spotifyData.album}">
+                <p class="font-bold">Song last listened to</p>
+                <SpotifyWidget />    
 
-                        <div class="h-full">
-                            <p>{spotifyData.name}</p>
-                            <p class="text-sm italic">{spotifyData.album}</p>
-                            <p class="text-xs">{spotifyData.artist}</p>
-                        </div>
-                    </div>
-
-                    <div class="w-full bg-gray-500 h-[1px] m-2"></div>
-                {/if}
+                <hr class="bg-black my-2">
 
                 <p class="font-bold">Navigation</p>
 
                 <ul class="underline">
-                    <li><a href="https://github.com/zach-pike">My Github</a></li>
-                    <li><Link to="randomProject">Go to a random project</Link></li>
-                    <li><Link to="logbook">QSO book</Link></li>
+                    <li><Link to="/">Home</Link></li>
+                    <li><Link to="projects">My projects</Link></li>
+                    <li><a href="https://github.com/zach-pike">My GitHub</a></li>
+                    <!-- <li><Link to="logbook">QSO book</Link></li> -->
 
                     {#if $userData == null}
                         <!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -102,7 +86,7 @@
                 
                 <!-- If user is admin display admin items -->
                 {#if $userData != null && $userData.roles.includes("admin")}
-                    <div class="w-full bg-gray-500 h-[1px] m-2"></div>
+                    <hr class="bg-black my-2">
 
                     <p class="font-bold text-red-800">Admin Panel items</p>
                 
@@ -113,7 +97,11 @@
                         <!-- svelte-ignore a11y_invalid_attribute -->
                         <li><a href="#" on:click={() => logbookEditorOpen = true}>Logbook editor</a></li>
 
+                        <!-- svelte-ignore a11y_invalid_attribute -->
                         <li><a href="#" on:click={() => fileUploadManagerOpen = true}>File upload</a></li>
+
+                        <!-- svelte-ignore a11y_invalid_attribute -->
+                        <li><a href="#" on:click={() => projectPostEditorOpen = true}>Project Post editor</a></li>
                     </ul>
 
                     <!-- Blog post modal -->
@@ -130,14 +118,18 @@
                     <Modal title="Upload a file" bind:isOpen={fileUploadManagerOpen}>
                         <FileHostWidget />
                     </Modal>
+
+                    <Modal title="Project Post" bind:isOpen={projectPostEditorOpen}>
+                        <ProjectPostEditor />
+                    </Modal>
                 {/if}
             </div>
 
             <div class="w-full h-32 bg-white sm:col-span-2 flex items-center justify-center flex-col">
                 <p>&copy; Zachary Pike 2025</p>
-                <div class="flex gap-2">
+                <div class="flex gap-2 sm:flex-row flex-col sm:items-left items-center">
                     <p>Some of my friends websites</p>
-                    <p>|</p>
+                    <p class="sm:block hidden">|</p>
                     <a href="https://of-random.net" class="text-blue-500">of-random.net</a>
                     <a href="https://wrzeczak.net/" class="text-blue-500">wrzeczak.net</a>
                 </div>
