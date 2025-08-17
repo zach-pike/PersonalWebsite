@@ -38,4 +38,22 @@ export class ProjectsService {
 
         return items;
     }
+
+    async deleteByID(id: string) {
+        try {
+            await this.projectModel.findById(id).deleteOne().exec();
+            return true;
+        } catch(e) {
+            return false;
+        }
+    }
+
+    async editByID(id: string, data: Partial<CreateProjectPostDTO>) {
+        try {
+            await this.projectModel.findByIdAndUpdate(id, data).exec();
+            return true;
+        } catch(e) {
+            return false;
+        }
+    }
 }

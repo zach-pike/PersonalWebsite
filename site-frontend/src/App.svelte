@@ -7,11 +7,10 @@
     import BlogPostEditor from "./components/BlogPostEditor.svelte";
     import LogbookEditor from "./components/LogbookEditor.svelte";
     import { onMount } from "svelte";
-    import FileHostWidget from "./components/FileHost/FileHostWidget.svelte";
-    import { getServerURL } from "./lib/utils";
+    import FileHostWidget from "./components/admin/FileHost/FileHost.svelte";
     import SpotifyWidget from "./components/SpotifyWidget.svelte";
     import Projects from "./pages/Projects.svelte";
-    import ProjectPostEditor from "./components/ProjectPostEditor.svelte";
+    import ProjectPostEditor from "./components/admin/ProjectEditor/Projects.svelte";
     import ViewProject from "./pages/ViewProject.svelte";
 
     async function loginProcedure() {

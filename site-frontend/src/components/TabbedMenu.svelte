@@ -12,8 +12,10 @@
 
     let selected = $state(0);
 
-    setContext('changePage', (p: number) => {
-        selected = p;
+    setContext('tabbed-menu', {    
+        setCurrent: (p: number) => {
+            selected = p;
+        }
     });
 </script>
 

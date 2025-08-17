@@ -18,6 +18,24 @@ export class ProjectsController {
         return "OK";
     }
 
+    @Post('delete')
+    @UseGuards(AuthGuard, PermissionGuard('admin.projects.delete'))
+    async deleteProject(@Body() body: { toDelete: string }) {
+        let a = await this.projectsService.deleteByID(body.toDelete);
+
+        if (!a) throw new HttpException("Failed to delete document!", 400);
+        return "OK";
+    }
+
+    @Post('edit')
+    @UseGuards(AuthGuard, PermissionGuard('admin.projects.edit'))
+    async editProject(@Body() body: { toEdit: string, updatedFields: Partial<CreateProjectPostDTO> }) {
+        let a = await this.projectsService.editByID(body.toEdit, body.updatedFields);
+        
+        if (!a) throw new HttpException("Failed to edit document!", 400);
+        return "OK";
+    }
+
     @Get('byId/:id')
     async projByID(@Param('id') id: string) {
         let doc = await this.projectsService.byId(id);

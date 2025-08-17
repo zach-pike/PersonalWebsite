@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { getAccessToken } from "../../lib/globals";
-    import { getServerURL } from "../../lib/utils";
+    import { getAccessToken } from "../../../lib/globals";
+    import { getServerURL } from "../../../lib/utils";
 
     let fileInput: HTMLInputElement;
 
