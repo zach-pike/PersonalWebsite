@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { setContext } from "svelte";
+
     interface TabItem {
         name: string,
         component?: any;
@@ -9,13 +11,17 @@
     }: { tabs: TabItem[] } = $props();
 
     let selected = $state(0);
+
+    setContext('changePage', (p: number) => {
+        selected = p;
+    });
 </script>
 
-<div class="flex flex-col h-full">
-    <div class="w-full h-1/10 flex border">
+<div class="flex flex-col">
+    <div class="w-full h-8 flex border">
         {#each tabs as t, i}
             <div 
-                class="grow flex items-center justify-center cursor-pointer hover:bg-gray-500 {selected == i ? "bg-gray-600" : ""}" 
+                class="grow flex items-center justify-center cursor-pointer hover:bg-gray-200 {selected == i ? "bg-gray-300" : ""}" 
                 on:click={() => selected = i}
             >
                 <p class="cursor-pointer font-bold">{t.name}</p>
