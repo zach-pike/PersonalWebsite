@@ -76,7 +76,7 @@
         </div>
     </div>
 
-    <div class="w-full h-[1px] bg-gray-500"></div>
+    <hr class="bg-gray-500">
 
     <div class="flex items-center justify-evenly">
         <div class="flex items-center">
@@ -103,7 +103,7 @@
         </div>
     </div>
 
-    <div class="w-full h-[1px] bg-gray-500"></div>
+    <hr class="bg-gray-500">
 
     <div class="flex items-center justify-evenly">
         <div>
@@ -117,7 +117,7 @@
         </div>
     </div>
 
-    <div class="w-full h-[1px] bg-gray-500"></div>
+    <hr class="bg-gray-500">
 
     <div>
         <label for="notes">Additional Notes:</label>

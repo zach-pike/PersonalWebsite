@@ -59,7 +59,7 @@
         <input type="submit" value="Upload" class="block border p-2 m-1 cursor-pointer">
     </form>
 
-    <div class="w-full h-[1px] bg-gray-500 m-2"></div>
+    <hr class="bg-gray-500">
 
     <p>{fileUploadInfo}</p>
 </div>
