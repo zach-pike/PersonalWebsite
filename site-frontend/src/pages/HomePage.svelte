@@ -1,7 +1,6 @@
 <script lang="ts">
-    import BlogWidget from "../components/BlogWidget.svelte";
-    import LogbookWidget from "../components/LogbookWidget.svelte";
-
+    import BlogWidget from "../components/widgets/BlogWidget.svelte";
+    import LogbookWidget from "../components/widgets/LogbookWidget.svelte";
 </script>
 
 <div>

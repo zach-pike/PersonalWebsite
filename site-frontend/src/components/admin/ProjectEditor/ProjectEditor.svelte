@@ -1,6 +1,6 @@
 <script>
     import TabbedMenu from "../../TabbedMenu.svelte";
-    import ProjectCreate from "./ProjectCreateEdit.svelte";
+    import ProjectCreateEdit from "./ProjectCreateEdit.svelte";
     import ProjectManage from "./ProjectsManage.svelte";
 </script>
 
@@ -8,7 +8,7 @@
     [
         {
             name: "Post",
-            component: ProjectCreate
+            component: ProjectCreateEdit
         }, {
             name: "Manage",
             component: ProjectManage

@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { getRecentBlogPosts } from "../lib/blog";
-    import { getServerURL } from "../lib/utils";
+    import { getRecentBlogPosts } from "../../lib/blog";
+    import { getServerURL } from "../../lib/utils";
     import SvelteMarkdown from "svelte-markdown";
-    import { fixedRenderers } from "../md-renderers/index";
+    import { fixedRenderers } from "../../md-renderers/index";
 
     let posts = getRecentBlogPosts(getServerURL());
 </script>

@@ -1,9 +1,8 @@
 <script lang="ts">
     import ListPagination from "../../ListPagination.svelte";
-    import AdminProjectListItem from "./ProjectListItem.svelte";
-
-
-
+    import ProjectListItem from "./ProjectListItem.svelte";
 </script>
 
-<ListPagination endpoint={"/projects"} listItem={AdminProjectListItem} />
+<div class="p-2">
+    <ListPagination endpoint={"/projects"} listItem={ProjectListItem} />
+</div>

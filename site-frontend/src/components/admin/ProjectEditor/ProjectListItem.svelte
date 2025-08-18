@@ -46,7 +46,7 @@
     }
 </script>
 
-<div class="mx-2 p-2 border">
+<div class="p-2 border">
     <ProjectListItem data={data} />
 
     <div class="w-full flex justify-center gap-2 mt-2">

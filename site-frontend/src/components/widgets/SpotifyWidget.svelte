@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { getServerURL } from "../lib/utils";
+    import { getServerURL } from "../../lib/utils";
 
     interface SongInfo {
         name: string;

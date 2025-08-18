@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { getRecentLogbookPosts } from "../lib/logbook";
-    import { getServerURL } from "../lib/utils";
+    import { getRecentLogbookPosts } from "../../lib/logbook";
+    import { getServerURL } from "../../lib/utils";
     
     let posts = getRecentLogbookPosts(getServerURL());
 </script>

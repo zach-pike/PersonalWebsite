@@ -7,10 +7,10 @@
     import BlogPostEditor from "./components/BlogPostEditor.svelte";
     import LogbookEditor from "./components/LogbookEditor.svelte";
     import { onMount } from "svelte";
-    import FileHostWidget from "./components/admin/FileHost/FileHost.svelte";
-    import SpotifyWidget from "./components/SpotifyWidget.svelte";
+    import FileHost from "./components/admin/FileHost/FileHost.svelte";
+    import SpotifyWidget from "./components/widgets/SpotifyWidget.svelte";
     import Projects from "./pages/Projects.svelte";
-    import ProjectPostEditor from "./components/admin/ProjectEditor/Projects.svelte";
+    import ProjectEditor from "./components/admin/ProjectEditor/ProjectEditor.svelte";
     import ViewProject from "./pages/ViewProject.svelte";
 
     async function loginProcedure() {
@@ -115,11 +115,11 @@
 
                     <!-- File Upload -->
                     <Modal title="Upload a file" bind:isOpen={fileUploadManagerOpen}>
-                        <FileHostWidget />
+                        <FileHost />
                     </Modal>
 
                     <Modal title="Project Post" bind:isOpen={projectPostEditorOpen}>
-                        <ProjectPostEditor />
+                        <ProjectEditor />
                     </Modal>
                 {/if}
             </div>
