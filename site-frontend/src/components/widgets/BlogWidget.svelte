@@ -17,6 +17,7 @@
             {#each awaitedPosts as p}
                 <div class="bg-gray-200 p-4 my-1">
                     <p><span class="font-bold">{p.title}</span> <span class="italic text-sm">{new Date(p.time).toLocaleString('en-US')}</span></p>
+                    <div class="w-full h-[1px] bg-black mb-1.5"></div>
                     <SvelteMarkdown source={p.content} renderers={fixedRenderers} />
                 </div>
             {/each}
