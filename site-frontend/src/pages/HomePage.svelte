@@ -5,15 +5,15 @@
 
 <div>
     <p class="text-2xl">Welcome!</p>
-    <p>Hello, my name is Zachary and this is my website! I live on the eastern shore of Maryland, near Kent Island. My hobbies include; Computing, Radio, Engineering, and of course Programming. I am interested in pursuing a Computer Science Degree from Salisbury Univerity, for now I work at a marina doing boat related stuff.</p>
+    <p>Hello, my name is Zachary and this is my website! I live on the eastern shore of Maryland, near Kent Island. My hobbies include; Computing, Radio, Engineering, and of course Programming.</p>
 
     <hr class="bg-gray-500">
             
     <p class="text-xl m-1">Updates</p>
     <BlogWidget />
 
-    <hr class="bg-gray-500">
+    <!-- <hr class="bg-gray-500">
 
     <p class="text-xl m-1">QSO Logbook</p>
-    <LogbookWidget />
+    <LogbookWidget /> -->
 </div>
